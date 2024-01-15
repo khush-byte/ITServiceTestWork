@@ -1,0 +1,95 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Admin Panel";
+    var result = "";
+
+    if(IsPost) {
+        // Form submitted, save it!
+
+        var name = Request.Form["name"];
+        var desc = Request.Form["desc"];
+        var price = Request.Form["price"];
+        var image = WebImage.GetImageFromRequest();
+        var fileName = "";
+
+        if (image != null && name != null && desc != null && price != null)
+        {
+            // get the file name
+            fileName = Path.GetFileName(image.FileName);
+            var mapPath = Server.MapPath("~/Images/Products/" + fileName);
+            var thumbPath = Server.MapPath("~/Images/Products/Thumbnails/" + fileName);
+            // save the image
+            image.Save(mapPath);
+            image.Save(thumbPath);
+
+            var db = Database.Open("bakery");
+            db.Execute("INSERT INTO Products (Name, Description, Price, ImageName) VALUES (@0, @1, @2, @3)", name, desc, price, fileName);
+            result = "Ваш товар сохранен. Посмотрите это на сайте вашего магазина!";
+        }
+        else
+        {
+            result = "Заполните все формы и добавьте картинку, для добавления продукта!";
+        }
+    }
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        label {
+            margin: 0;
+            display: block;
+        }
+
+        input[type="text"], textarea {
+            padding: 2px;
+            width: 300px;
+            font-family: inherit;
+        }
+
+        textarea {
+            height: 100px;
+        }
+    </style>
+    <script>
+        function validate(evt) {
+            var theEvent = evt || window.event;
+
+            // Handle paste
+            if (theEvent.type === 'paste') {
+                key = event.clipboardData.getData('text/plain');
+            } else {
+                // Handle key press
+                var key = theEvent.keyCode || theEvent.which;
+                key = String.fromCharCode(key);
+            }
+            var regex = /^[0-9]{1,10}$/;
+            if (!regex.test(key)) {
+                theEvent.returnValue = false;
+                if (theEvent.preventDefault) theEvent.preventDefault();
+            }
+        }
+    </script>
+</head>
+<body>
+    <h4 style="color:red">@result</h4>
+    <h4>Добавление нового продукта</h4>
+    <p>Добавьте информацию о своем продукте и сохраните ее в базе данных.</p>
+    <form method="post" enctype="multipart/form-data">
+        <label id="name">Наименование товара</label><br />
+        <input type="text" name="name" id="name" /><br /><br />
+        <label id="price">Цена продукта</label><br />
+        <input type="text" onkeypress='validate(event)' name="price" id="price" /><br /><br />
+        <label id="desc">Описание продукта</label><br />
+        <textarea name="desc" id="desc"></textarea><br /><br />
+        <label id="name">Изображение продукта</label><br />
+        <input type="file" name="image" id="name" accept="Image/*" /><br />
+        <p>Здесь, вы можете добавить изображение, которое будет показано пользователю, когда он откроет страницу продукта.</p>
+        <input type="submit" value="Сохранить" /><br /><br />
+    </form>
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Add Product";
+    var result = "";
+
+    if (IsPost)
+    {
+        var login = Request.Form["login"];
+        var password = Request.Form["password"];
+
+
+        if (login != "" && password != "")
+        {
+            Response.Redirect("~/Admin");
+        }
+        else
+        {
+            result = "Введите логин и пароль!";
+        }
+    }
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        label {
+            margin: 0;
+            display: block;
+        }
+
+        input[type="text"], textarea {
+            padding: 2px;
+            width: 300px;
+            font-family: inherit;
+        }
+
+        textarea {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h4 style="color:red">@result</h4>
+    <h4>Авторизация</h4>
+    <p>Пожалуйста, введите логин и пароль</p>
+    <form method="post" enctype="multipart/form-data">
+        <label id="login">Логин</label><br />
+        <input type="text" name="login" id="login" /><br /><br />
+        <label id="password">Пароль</label><br />
+        <input type="text" name="password" id="password" /><br /><br />
+        <input type="submit" value="Далее" /><br /><br />
+    </form>
+</body>
+</html>

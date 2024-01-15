@@ -1,0 +1,15 @@
+﻿@{
+    Page.Title = "Order Succeeded!";
+    var emailNotSetUp = Request["NoEmail"] != null;
+}
+<ol id="orderProcess">
+    <li><span class="step-number">1</span>Choose Item</li>
+    <li><span class="step-number">2</span>Details &amp; Submit</li>
+    <li class="current"><span class="step-number">3</span>Receipt</li>
+</ol>
+<h1>Подтверждение заказа</h1>
+
+<div class="message info">
+    <h2>Спасибо за ваш заказ!</h2>
+    <p>Мы обрабатываем ваш заказ и отправили вам на почту письмо с подтверждением!</p>
+</div>

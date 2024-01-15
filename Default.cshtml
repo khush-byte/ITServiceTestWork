@@ -1,0 +1,51 @@
+﻿@{
+    Page.Title = "Home";
+
+    var db = Database.Open("bakery");
+    //db.Query("DELETE FROM PRODUCTS WHERE id = 14");
+    var products = db.Query("SELECT * FROM PRODUCTS").ToList();
+    var featured = products[new Random().Next(products.Count)];
+}
+
+<h1 style="margin-left:13px">Онлайн Магазин</h1>
+
+<div id="featuredProduct">
+    <img style="height: 300px; object-fit:cover;" alt="Featured Product" src="~/Images/Products/@featured.ImageName"/>
+    <div id="featuredProductInfo">
+        <div id="productInfo">
+            <h2>@featured.Name</h2>
+            <p class="price">@string.Format("{0:f}", featured.Price) с.</p>
+            <p class="description">@featured.Description</p>
+        </div>
+        <div id="callToAction">
+            <a class="order-button" href="~/order/@featured.Id" title="Order @featured.Name">Заказать</a>
+        </div>
+    </div>
+</div>
+
+<div id="productsWrapper">
+    <ul id="products" data-role="listview" data-inset="true">
+        @foreach (var p in products) {
+            <li class="product">
+                <a href="~/order/@p.Id" title="Order @p.Name">
+                    <img class="hide-from-desktop" src="~/Images/Products/Thumbnails/@p.ImageName" alt="Image of @p.Name" />
+                
+                    <div class="productInfo">
+                        <h3>@p.Name</h3>
+                        <img style="object-fit: contain; background-color:white" class="product-image hide-from-mobile" src="~/Images/Products/Thumbnails/@p.ImageName" alt="Image of @p.Name" />
+                        <p class="description">@p.Description</p>
+                        <p class="price hide-from-desktop">@string.Format("{0:f}", p.Price) с.</p>                    
+                    </div>
+                </a>
+
+                <!-- Desktop only -->
+                <div class="action  hide-from-mobile">
+                    <p class="price">@string.Format("{0:f}", p.Price) с.</p>
+                    <a class="order-button" href="~/order/@p.Id" title="Order @p.Name">Заказать</a>
+                </div>
+                 
+            </li>
+
+        }
+    </ul>
+</div>
